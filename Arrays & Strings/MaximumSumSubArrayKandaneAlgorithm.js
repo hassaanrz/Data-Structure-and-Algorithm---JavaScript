@@ -21,8 +21,9 @@ const maximumSumSubArray = function(arr) {
 			} else {
 				sum = 0;
 			}
+                        ans = Math.max(sum, ans);
 		}
-		ans = Math.max(sum, ans);
+
 		return ans;	
 	}
 }
