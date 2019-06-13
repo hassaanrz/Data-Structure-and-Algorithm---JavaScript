@@ -1,108 +1,124 @@
 class Node {
-  constructor(value) {
-    this.data = value;
-    this.next = null;
-  }
+	constructor(data){
+		this.info = data;
+		this.link = null;
+	}
 }
+
 class LinkedList {
-  constructor(value) {
-    this.head = {
-      data: value,
-      next: null
-    },
-    this.tail = this.head;
-    this.length = 1;
-  }
-
-  append(value) {
-    const newNode = new Node(value);
-    this.tail.next = newNode;
-    this.tail = newNode;
-    this.length ++;
-    return (this);
-  }
-
-  prepend(value) {
-    const newNode = new Node(value);
-    newNode.next = this.head;
-    this.head= newNode;
-    this.length ++;
-    return (this);
-  }
-
-  printList() {
-    const array = [];
-    let currentNode = this.head;
-    while(currentNode !=null) {
-      array.push(currentNode.data);
-      currentNode=currentNode.next;
-    }
-    return array;
-  }
-
-  traverseToIndex(index) {
-    let counter = 0;
-    let currentNode = this.head;
-    while(counter !== index) {
-      currentNode = currentNode.next; 
-      counter ++;
-    }
-    return currentNode;
-  }
-
-  insert(index, value) {
-    if(index==0) {
-      return this.prepend(value);
-    }
-    if (index >=this.length) {
-      return this.append(value);
-    }
-    const newNode = new Node(value);
-    const leader = this.traverseToIndex(index - 1);
-    newNode.next=leader.next;
-    leader.next = newNode;
-    this.length ++;
-    return this.printList();
-  }
-
-  remove(index) {
-    if(index == 0) {
-      this.head = this.head.next;
-      this.length --;
-      return this.printList();
-    }
-    const leader = this.traverseToIndex(index - 1);
-    const unWantedNode = leader.next; 
-    leader.next = unWantedNode.next;
-    this.length --;
-    return this.printList();
-  }
-
-  reverse() {
-    if(!this.head.next) {
-      return (this.head);
-    }
-    let first = this.head;
-    this.tail = this.head;
-    let second = first.next;
-    while(second) {
-      let temp = second.next;
-      second.next = first;
-      first = second;
-      second = temp;
-    }
-    this.head.next = null;
-    this.head = first;
-    return (this);
-  }
+	constructor() {
+		this.head = null;
+		this.length = 0;
+	}
+	append(data){
+		let node = new Node(data);
+		if(this.head === null){
+			this.head=node;
+			this.length++;
+		} else {
+			let start = this.head;
+			while(start.link != null){
+				start=start.link;
+			}
+			start.link=node;
+			this.length++;
+		}
+		return this;
+	}
+	
+	prepend(data) {
+		let node = new Node(data);
+		if(this.head === null){
+			this.head=node;
+			this.length++;
+		} else {
+			let start = this.head;
+			this.head=node;
+			node.link=start;
+			this.length++;
+	   }
+	 return this;
+   }
+   
+   traverseToIndex(index) {
+   	let start = this.head, i=0;
+   	while(start != null && index != i) {
+   		start = start.link;
+   		i++;
+   	}
+   	return start;
+   }
+	
+	insert(data, index) {
+		if(index==0) {
+			this.prepend(data);
+		} else if(index >=this.length) {
+			this.append(data);
+		} else {
+			let node, leader;
+			node = new Node(data);
+			leader = this.traverseToIndex(index - 1);
+			node.link = leader.link;
+			leader.link = node;
+			this.length++;
+		}
+		
+		return this;
+	}
+	
+	remove(index) {
+		if(index == 0) {
+			if(this.head.link == null) {
+				this.head=null;
+			} else {
+				this.head = this.head.link;
+			}
+			
+			this.length--;
+			return this;
+		} else {
+			let leader = this.traverseToIndex(index-1);
+			leader.link = leader.link.link;
+			this.length--;
+		}
+	}
+	
+	reverse() {
+		let current = this.head;
+		if(current == null) {
+			return current;
+		} else {
+			let prev = null;
+			while(current !=null){
+				let next = current.link;
+				current.link = prev;
+				prev = current;
+				current = next;
+			}
+			this.head = prev;
+			return this;
+		}
+	}
+	
+	printList() {
+		let start= this.head;
+		const arr =[];
+		while(start!=null) {
+			arr.push(start.info);
+			start = start.link;
+		}
+		return arr;
+	}
 }
 
-const myLinkedList = new LinkedList(10);
-myLinkedList.append(5);
-myLinkedList.append(16);
-console.log(myLinkedList.prepend(1));
-console.log(myLinkedList.printList());
-console.log(myLinkedList.insert(2,88));
-console.log(myLinkedList.length);
-console.log(myLinkedList.remove(0));
-console.log(myLinkedList.reverse());
+const list= new LinkedList();
+list.append(3);
+list.append(4);
+list.prepend(2);
+list.prepend(1);
+list.insert(5, 2);
+console.log(list.printList());
+list.remove(1);
+console.log(list.printList());
+list.reverse();
+console.log(list.printList());
